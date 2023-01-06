@@ -17,6 +17,7 @@
 			font-family: monospace, serif;
 			font-size: 16px;
 		}
+
 		body {
 			display: flex;
 			padding: 1rem;
@@ -24,17 +25,21 @@
 			justify-content: center;
 			box-sizing: border-box;
 		}
+
 		main {
 			width: 100%;
 			max-width: 500px;
 		}
+
 		h1 {
 			text-align: center;
 			margin-bottom: 2rem;
 		}
+
 		#percent {
 			font-weight: bold;
 		}
+
 		#binary {
 			display: flex;
 			margin: 2rem;
@@ -44,6 +49,7 @@
 			align-items: center;
 			font-size: 1.2rem;
 		}
+
 		@media only screen and (min-width: 600px) {
 			#binary {
 				flex-direction: row;
@@ -62,7 +68,6 @@
 		<span id="byte2"></span>
 		<span id="byte3"></span>
 		<span id="byte4"></span>
-
 	</div>
 	<p>Only <b><span id="days"></span> days</b> (<span id="years"></span> years) until it's finally 20:45:52 UTC on 13 December 1901 again!</p>
 	</main>
@@ -94,7 +99,7 @@
 			return ((progress / 4294967295) * 100.0).toFixed(2);
 		}
 
-		setInterval(function() {
+		function updateCountdown() {
 			var epochMs = new Date().getTime();
 			var percent = unsigned32Percent(epochMs);
 			perc.innerText = percent + "%";
@@ -112,7 +117,12 @@
 
 			yearsElem.innerText = "" + years;
 			daysElem.innerText = "" + days;
-		});
+		}
+
+		updateCountdown();
+		setInterval(function() {
+			updateCountdown();
+		}, 1000);
 	</script>
 </body>
 </html>
