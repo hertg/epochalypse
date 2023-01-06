@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Epochalypse</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta property="og:title" content="How much time until the Epochalypse?" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://epochalypse.today" />
+	<meta property="og:image" content="https://epochalypse.today/preview.png" />
+	<meta property="og:description" content="A countdown to the end of 32-bit unix time">
+
+	<style>
+		html, body {
+			margin: 0;
+			font-family: monospace, serif;
+			font-size: 16px;
+		}
+		body {
+			display: flex;
+			padding: 1rem;
+			width: 100%;
+			justify-content: center;
+			box-sizing: border-box;
+		}
+		main {
+			width: 100%;
+			max-width: 500px;
+		}
+		h1 {
+			text-align: center;
+			margin-bottom: 2rem;
+		}
+		#percent {
+			font-weight: bold;
+		}
+		#binary {
+			display: flex;
+			margin: 2rem;
+			justify-content: center;
+			gap: 1rem;
+			flex-direction: column;
+			align-items: center;
+			font-size: 1.2rem;
+		}
+		@media only screen and (min-width: 600px) {
+			#binary {
+				flex-direction: row;
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<main>
+	<h1>Epochalypse</h1>
+	<span id="countdown"></span>
+	<p>The signed 32-bit integer that is commonly used to keep unix epoch time has already exhausted <span id="percent"></span> of all possible values.</p>
+	<div id="binary">
+		<span id="byte1"></span>
+		<span id="byte2"></span>
+		<span id="byte3"></span>
+		<span id="byte4"></span>
+
+	</div>
+	<p>Only <b><span id="days"></span> days</b> (<span id="years"></span> years) until it's finally 20:45:52 UTC on 13 December 1901 again!</p>
+	</main>
+
+	<script>
+		console.log("Full disclosure: This website doesn't work if a time traveler visits from before 1970.");
+		console.log("...also it will behave unexpectedly after the epochalypse, and it won't be the only thing doing so");
+
+		var y2k38 = new Date("Jan 19, 2038 03:14:08 UTC");
+
+		var elem = document.getElementById("countdown");
+		var perc = document.getElementById("percent");
+		var bin = document.getElementById("binary");
+
+		var byte1 = document.getElementById("byte1");
+		var byte2 = document.getElementById("byte2");
+		var byte3 = document.getElementById("byte3");
+		var byte4 = document.getElementById("byte4");
+
+		var yearsElem = document.getElementById("years");
+		var daysElem = document.getElementById("days");
+
+		function pad(num, len) {
+			return ("0".repeat(len) + num).slice(-len);
+		}
+
+		function unsigned32Percent(epochMs) {
+			var progress = Math.floor(epochMs / 1000) + 2147483648;
+			return ((progress / 4294967295) * 100.0).toFixed(2);
+		}
+
+		setInterval(function() {
+			var epochMs = new Date().getTime();
+			var percent = unsigned32Percent(epochMs);
+			perc.innerText = percent + "%";
+
+			bits = pad(Math.floor(epochMs / 1000).toString(2), 32);
+
+			byte1.innerText = "1" + bits.substr(1, 7);
+			byte2.innerText = bits.substr(8, 8);
+			byte3.innerText = bits.substr(16, 8);
+			byte4.innerText = bits.substr(24, 8);
+
+			var diff = y2k38 - epochMs;
+			var years = Math.floor(diff / (1000 * 60 * 60 * 24) / 365.25);
+			var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+			yearsElem.innerText = "" + years;
+			daysElem.innerText = "" + days;
+		});
+	</script>
+</body>
+</html>
