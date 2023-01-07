@@ -50,6 +50,23 @@
 			font-size: 1.2rem;
 		}
 
+		#byte1 {
+			display: flex;
+			gap: 0;
+		}
+
+		#signbit {
+			color: red;
+		}
+
+		#signbit:after {
+			content: 'sign';
+			position: absolute;
+			font-size: 0.5rem;
+			margin-top: 1.2rem;
+			margin-left: -1rem;
+		}
+
 		@media only screen and (min-width: 600px) {
 			#binary {
 				flex-direction: row;
@@ -62,12 +79,15 @@
 	<main>
 	<h1>Epochalypse</h1>
 	<span id="countdown"></span>
-	<p>The signed 32-bit integer that is commonly used to keep unix epoch time has already exhausted <span id="percent"></span> of all possible values.</p>
+	<p>The signed 32-bit integer that is historically used to keep unix epoch time has already exhausted <span id="percent"></span> of all possible values.</p>
 	<div id="binary">
-		<span id="byte1"></span>
-		<span id="byte2"></span>
-		<span id="byte3"></span>
-		<span id="byte4"></span>
+		<p id="byte1">
+			<span id="signbit"></span>
+			<span id="byte1-rest"></span>
+		</p>
+		<p id="byte2"></p>
+		<p id="byte3"></p>
+		<p id="byte4"></p>
 	</div>
 	<p>Only <b><span id="days"></span> days</b> (<span id="years"></span> years) until it's finally 20:45:52 UTC on 13 December 1901 again!</p>
 	</main>
@@ -82,7 +102,8 @@
 		var perc = document.getElementById("percent");
 		var bin = document.getElementById("binary");
 
-		var byte1 = document.getElementById("byte1");
+		var signbit = document.getElementById("signbit");
+		var byte1Rest = document.getElementById("byte1-rest");
 		var byte2 = document.getElementById("byte2");
 		var byte3 = document.getElementById("byte3");
 		var byte4 = document.getElementById("byte4");
@@ -106,7 +127,8 @@
 
 			bits = pad(Math.floor(epochMs / 1000).toString(2), 32);
 
-			byte1.innerText = "1" + bits.substr(1, 7);
+			signbit.innerText = bits.substr(0, 1);
+			byte1Rest.innerText = bits.substr(1, 7);
 			byte2.innerText = bits.substr(8, 8);
 			byte3.innerText = bits.substr(16, 8);
 			byte4.innerText = bits.substr(24, 8);
